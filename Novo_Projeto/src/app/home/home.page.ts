@@ -13,8 +13,10 @@ export class HomePage {
     this.storage.create();
   }
 
+  operacao: string = "soma";
   ngOnInit(){
-    this.atualizaLista();
+    this.atualizaLista(this.operacao);
+
   }
 
   variavel_lista = [[]];
@@ -37,12 +39,10 @@ export class HomePage {
       })
 
 
-
       this.aux = this.aux + 1;
-
       await this.storage.set(this.aux.toString(), [this.texto, this.valor] );
-      this.atualizaLista();
-      this.soma = this.soma + Numero;
+      this.operacao = "soma";
+      this.atualizaLista(this.operacao);
       this.texto = "";
       this.valor = "";
 
@@ -50,19 +50,31 @@ export class HomePage {
 
   }
 
-  atualizaLista(){
+  Somar(numero){
+    this.soma = (+this.soma) + (+numero);
+  }
+
+  Subtracao(numero){
+    this.soma = (+this.soma) - (+numero)
+  }
+
+  atualizaLista(operaçao){
+    this.soma = 0;
     this.variavel_lista = [];
     this.storage.forEach((valor, key, index ) =>{
     this.variavel_lista.push([key,valor])
+    if(operaçao = "soma"){
+    this.Somar(valor[1]);
+    }else if(operaçao = "remocao"){
+    this.Subtracao(valor[1]);
+    }
   })
   }
 
-
-
   async Remover(indice){
-
     await this.storage.remove(indice);
-    this.atualizaLista();
+    this.operacao = "remocao"
+    this.atualizaLista(this.operacao);
 
   }
 
